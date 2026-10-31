@@ -34,6 +34,7 @@ from PySide6.QtWidgets import QHBoxLayout, QSplitter, QGraphicsItem
 from PySide6.QtCore import QEvent
 
 EMU=12700
+NEW_SLIDE_COLORS=dict(background='#f5f3eb',title='#202b3d',body='#202b3d')
 NS={'p':'http://schemas.openxmlformats.org/presentationml/2006/main','a':'http://schemas.openxmlformats.org/drawingml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
 FC='urn:freeconvert:slide-animation:1'
 CHARTS={'Column':XL_CHART_TYPE.COLUMN_CLUSTERED,'Bar':XL_CHART_TYPE.BAR_CLUSTERED,'Line':XL_CHART_TYPE.LINE,'Pie':XL_CHART_TYPE.PIE,'Scatter':XL_CHART_TYPE.XY_SCATTER}
@@ -195,7 +196,8 @@ class SlideObject(QGraphicsObject):
                 painter.setPen(QColor('#eeeeee'));painter.drawText(rect,Qt.AlignCenter,'Object preserved\n'+shape.name)
         if self.text is not None:self.text.drawContents(painter,rect)
         if self.isSelected():
-            painter.setPen(QPen(QColor('#ffdd22'),1,Qt.DashLine));painter.setBrush(Qt.NoBrush);painter.drawRect(rect.adjusted(.5,.5,-.5,-.5));painter.fillRect(QRectF(rect.right()-8,rect.bottom()-8,8,8),QColor('#ffdd22'))
+            pen=QPen(QColor('#9457ff'),1.5,Qt.DashLine);pen.setCosmetic(True)
+            painter.setPen(pen);painter.setBrush(Qt.NoBrush);painter.drawRect(rect.adjusted(.5,.5,-.5,-.5));painter.fillRect(QRectF(rect.right()-8,rect.bottom()-8,8,8),QColor('#9457ff'))
     def mousePressEvent(self,event):
         self.before=self.pos()
         if self.interactive and self.isSelected() and QRectF(self.boundingRect().right()-12,self.boundingRect().bottom()-12,12,12).contains(event.pos()):
@@ -216,6 +218,11 @@ class SlideObject(QGraphicsObject):
         else:super().mouseDoubleClickEvent(event)
 
 class SlideView(QGraphicsView):
+    def drawForeground(self,painter,rect):
+        # Editor-only page edge: it stays visible on dark slides and never exports.
+        pen=QPen(QColor('#898596'),1);pen.setCosmetic(True)
+        painter.save();painter.setPen(pen);painter.setBrush(Qt.NoBrush)
+        painter.drawRect(self.sceneRect().adjusted(.5,.5,-.5,-.5));painter.restore()
     def resizeEvent(self,event):
         super().resizeEvent(event)
         if self.scene():self.fitInView(self.sceneRect(),Qt.KeepAspectRatio)
@@ -271,12 +278,13 @@ class Dazzle(Workspace):
     def __init__(self):
         super().__init__('Dazzle')
         self.ready=True;self.loading=False;self.history=[];self.future=[];self._native_changed=False;self._loaded_path=None;self.players=[];self.imported_pptx=None;self.original_slides=[];self.index=0
+        self.preview_revision=0;self._thumbnail_cache={}
         self.title=QTextEdit(self);self.body=QTextEdit(self);self.title.hide();self.body.hide()
         self.list=QListWidget();self.list.setMaximumWidth(225)
         self.slide_page=SlideView();self.slide_page.setFrameShape(QGraphicsView.NoFrame)
-        self.slide_stage=QWidget();layout=QHBoxLayout(self.slide_stage);layout.setContentsMargins(12,12,12,12);layout.addStretch();layout.addWidget(self.slide_page);layout.addStretch()
+        self.slide_stage=QWidget();self.slide_stage.setObjectName('slideStage');self.slide_stage.setStyleSheet('QWidget#slideStage {background:#25252f;}');layout=QHBoxLayout(self.slide_stage);layout.setContentsMargins(24,24,24,24);layout.addStretch();layout.addWidget(self.slide_page);layout.addStretch()
         split=QSplitter();split.addWidget(self.list);split.addWidget(self.slide_stage);split.setStretchFactor(1,1);self.setCentralWidget(split)
-        self.deck=self._from_legacy([('','')],[dict(SLIDE_COLORS)]);self.scene=None
+        self.deck=self._from_legacy([('','')],[dict(NEW_SLIDE_COLORS)]);self.scene=None
         for label,callback in [('New',self.new),('Open',self.open),('Save',self.save),('Save as',self.save_as),('PDF',self.export_pdf),('Add slide',self.add),('Delete slide',self.delete)]:button(self.toolbar,label,callback)
         self._tools();self.refresh();self.dirty=False
         self.title.textChanged.connect(self._primary_changed);self.body.textChanged.connect(self._primary_changed);self.list.currentRowChanged.connect(self.select);self.slide_stage.installEventFilter(self)
@@ -288,7 +296,7 @@ class Dazzle(Workspace):
         command(self,'Slide','Present from beginning',lambda:self.present(0),'play','F5')
     def eventFilter(self,watched,event):
         if watched is self.slide_stage and event.type()==QEvent.Resize:
-            scale=min(max(1,watched.width()-24)/(self.deck.slide_width/EMU),max(1,watched.height()-24)/(self.deck.slide_height/EMU))
+            scale=min(max(1,watched.width()-48)/(self.deck.slide_width/EMU),max(1,watched.height()-48)/(self.deck.slide_height/EMU))
             self.slide_page.setFixedSize(round(self.deck.slide_width/EMU*scale),round(self.deck.slide_height/EMU*scale))
         return super().eventFilter(watched,event)
     def save(self):
@@ -407,10 +415,30 @@ class Dazzle(Workspace):
     def make_scene(self,index,interactive=True):
         scene=QGraphicsScene(self);scene.setSceneRect(0,0,self.deck.slide_width/EMU,self.deck.slide_height/EMU);scene.setBackgroundBrush(QColor(self._read_slide_colors(self.deck.slides[index])['background']))
         for z,shape in enumerate(self.deck.slides[index].shapes):
+            if not interactive:
+                # python-pptx style getters can create XML; previews must be read-only.
+                from pptx.shapes.shapetree import SlideShapeFactory
+                shape=SlideShapeFactory(copy.deepcopy(shape._element),self.deck.slides[index].shapes)
             item=SlideObject(self,shape,interactive);item.setZValue(z);scene.addItem(item)
         return scene
+    def thumbnail(self,index):
+        if not 0<=index<len(self.deck.slides):return ''
+        if index in self._thumbnail_cache:return self._thumbnail_cache[index]
+        from PySide6.QtCore import QBuffer,QIODevice
+        height=max(1,round(256*self.deck.slide_height/self.deck.slide_width))
+        image=QImage(256,height,QImage.Format_ARGB32);image.fill(Qt.transparent)
+        scene=self.make_scene(index,False);painter=QPainter(image)
+        try:
+            painter.setRenderHints(QPainter.Antialiasing|QPainter.SmoothPixmapTransform)
+            scene.render(painter,QRectF(0,0,image.width(),image.height()),scene.sceneRect())
+        finally:painter.end();scene.deleteLater()
+        buffer=QBuffer();buffer.open(QIODevice.WriteOnly);image.save(buffer,'PNG')
+        result='data:image/png;base64,'+base64.b64encode(bytes(buffer.data())).decode('ascii')
+        self._thumbnail_cache[index]=result
+        return result
     def refresh_scene(self):
         if not getattr(self,'ready',False) or not hasattr(self,'deck'):return
+        self.preview_revision+=1;self._thumbnail_cache.clear()
         selected=self.selected_shape().shape_id if getattr(self,'scene',None) and self.selected_shape() is not None else None
         old=self.scene;self.scene=self.make_scene(self.index);self.slide_page.setScene(self.scene);self.slide_page.fitInView(self.scene.sceneRect(),Qt.KeepAspectRatio)
         self.scene.selectionChanged.connect(self.selection_changed)
@@ -453,10 +481,11 @@ class Dazzle(Workspace):
             if item.native_shape.shape_id==shape.shape_id:item.setSelected(True);break
     def new(self):
         if not self.discard_changes():return
-        self.deck=self._from_legacy([('','')],[dict(SLIDE_COLORS)]);self.index=0;self.path=self.imported_pptx=self._loaded_path=None;self.history=[];self.future=[];self._native_changed=False;self.refresh();self.dirty=False
+        self.deck=self._from_legacy([('','')],[dict(NEW_SLIDE_COLORS)]);self.index=0;self.path=self.imported_pptx=self._loaded_path=None;self.history=[];self.future=[];self._native_changed=False;self.refresh();self.dirty=False
     def add(self):
         def add():
-            slide=self.deck.slides.add_slide(self.deck.slide_layouts[1]);style_slide(slide);self.index=len(self.deck.slides)-1
+            colors=dict(self.slide_styles[self.index])
+            slide=self.deck.slides.add_slide(self.deck.slide_layouts[1]);style_slide(slide,colors);self.index=len(self.deck.slides)-1
         self.change(add)
     def delete(self):
         if len(self.deck.slides)<=1:return
@@ -472,7 +501,7 @@ class Dazzle(Workspace):
     def insert_text(self,text='Text box'):
         def add():
             s=self.deck.slides[self.index].shapes.add_textbox(Pt(100),Pt(150),Pt(350),Pt(90));s.text=text
-            for p in s.text_frame.paragraphs:p.font.name='Calibri';p.font.size=Pt(24);p.font.color.rgb=RGBColor.from_string('FFDD22')
+            for p in s.text_frame.paragraphs:p.font.name='Calibri';p.font.size=Pt(24);p.font.color.rgb=RGBColor.from_string(self.slide_styles[self.index]['body'][1:])
             return s
         shape=self.change(add);self.choose(shape);return shape
     def insert_shape(self,kind='Rectangle'):

@@ -1,26 +1,20 @@
-## Drunk Peanuts 0.30.3
+## Drunk Peanuts 0.30.4
 
-Eight fresh Stitch designs inform the new Pages, Tables, Dazzle, Organize, Sketch, Formulaic, Writer and Play workspaces, built with React, Tailwind CSS and Lucide icons in the black, yellow and purple identity.
+Dazzle slides are now clearly separated from the dark editing workspace. New presentations start with a warm-white page and readable dark text. Existing slide backgrounds are preserved, and added slides inherit the current slide palette.
 
-The desktop app connects the shared navigation, contextual toolbars, searchable Commands, Save actions and optional inspectors directly to the existing native canvases and file engines. Open With, templates and new-document launches use the same interface. File-format limits and unsaved-work safeguards remain in place.
+The slide navigator now shows actual rendered thumbnails instead of placeholder cards. Visible previews load on demand, update after edits, and retain the presentation's aspect ratio. Rendering previews does not modify slide XML or mark the presentation as edited.
 
-Play includes React transport/seek controls, mute, volume up to 200%, editable local playlists with drag reordering, file/folder addition, playlist open/save, Picture in Picture and fullscreen. Its native VLC surface remains intact across viewing modes.
-
-All assets, the original logo, icons and Qt web runtime are bundled locally. No server, remote fonts, account or network connection is needed. The converter retains its native queue and tools.
-
-The macOS bundle also includes python-docx's module directories and header/footer templates, so opening Word documents can resolve those resources inside the app bundle.
+The editor adds a visible page edge and purple object-selection handles. The page edge is editor chrome and is not included in exported slides or PDFs. New text boxes use the slide's text color.
 
 ### Validation
 
-- 94 Python regression tests and the frontend Node check pass locally.
-- The actual React/native check covers Home and all eight workspaces, saved DOCX contents, formulas, screenplay/pen controls, responsive bounds, local navigation policy, PiP/fullscreen surface continuity and 200% volume.
-- Release builds repeat source checks and verify packaged UI, OCR, native conversion, playlists and playback on Windows x64, macOS Intel and Apple Silicon. The packaged suite check plays a temporary local WAV through the new Play shell.
+95 Python regression tests, the frontend Node check and the real React/native suite check. Added coverage verifies blank-slide visibility, readable text colors, real thumbnails, preserved dark imports, and preview updates. The packaged suite check verifies thumbnail loading through QWebChannel on Windows and both macOS architectures.
 
 ### Downloads
 
-- DrunkPeanuts-0.30.3-Setup.exe — Windows installer.
+- DrunkPeanuts-0.30.4-Setup.exe — Windows installer.
 - DrunkPeanuts-Windows-x64.zip — portable folder.
 - DrunkPeanuts-macOS-Apple-Silicon.zip and DrunkPeanuts-macOS-Intel.zip.
 - SHA256SUMS.txt — checksums.
 
-Windows binaries remain unsigned and macOS builds unnotarized. See docs/STITCH_SUITE_030.md for scope and checks.
+Windows binaries remain unsigned and macOS builds unnotarized.

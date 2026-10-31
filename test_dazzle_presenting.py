@@ -19,6 +19,33 @@ class PresentingBatchTest(unittest.TestCase):
         for widget in self.app.topLevelWidgets():widget.deleteLater()
         QCoreApplication.sendPostedEvents(None,QEvent.DeferredDelete)
 
+    def test_visible_default_slide_real_previews_and_preserved_dark_import(self):
+        import base64
+        from PySide6.QtGui import QImage
+        from office_templates import style_slide
+        editor=Dazzle()
+        def preview():
+            data=editor.thumbnail(0).split(',',1)[1]
+            return QImage.fromData(base64.b64decode(data))
+        original=editor.deck.slides[0]._element.xml
+        self.assertEqual(preview().pixelColor(3,3).name(),'#f5f3eb')
+        self.assertEqual(editor.deck.slides[0]._element.xml,original)
+        self.assertFalse(editor.dirty)
+        editor.insert_text('Visible on the new page')
+        shape=editor.deck.slides[0].shapes[-1]
+        self.assertEqual(str(shape.text_frame.paragraphs[0].font.color.rgb),'202B3D')
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'Existing dark deck.pptx'
+            deck=Presentation();slide=deck.slides.add_slide(deck.slide_layouts[1]);style_slide(slide);deck.save(path)
+            editor.dirty=False;editor.open(path)
+            original=editor.deck.slides[0]._element.xml
+            self.assertEqual(preview().pixelColor(3,3).name(),'#0b0b0b')
+            self.assertEqual(editor.deck.slides[0]._element.xml,original)
+            editor.add()
+            self.assertEqual(editor.slide_styles[1]['background'],'#0b0b0b')
+            editor.background_color('#9457ff')
+            self.assertEqual(QImage.fromData(base64.b64decode(editor.thumbnail(1).split(',',1)[1])).pixelColor(3,3).name(),'#9457ff')
+
     def test_notes_size_duplication_undo_and_native_roundtrip(self):
         with tempfile.TemporaryDirectory() as folder:
             editor=Dazzle();editor.set_notes('Opening cues\nKeep this off the slide.');editor.add();editor.set_notes('Second slide')

@@ -38,7 +38,7 @@ class OfficeObjectsTest(unittest.TestCase):
             text=editor.insert_text('A real text box');editor.format_object(name='Arial',size=32,bold=True,color='#ffdd22');editor.animate_object(text,.7)
             editor.insert_shape('Ellipse');editor.insert_image(image);editor.insert_chart('Column',chart_data('Month,Sales\nJan,12\nFeb,24'));editor.insert_table(2,3);editor.background_color('#102030')
             self.assertEqual(len(editor.deck.slides[0].shapes),7)
-            before=len(editor.deck.slides[0].shapes);editor.undo();self.assertEqual(editor.slide_styles[0]['background'],'#0b0b0b');editor.redo();self.assertEqual(len(editor.deck.slides[0].shapes),before)
+            before=len(editor.deck.slides[0].shapes);editor.undo();self.assertEqual(editor.slide_styles[0]['background'],'#f5f3eb');editor.redo();self.assertEqual(len(editor.deck.slides[0].shapes),before)
             target=root/'objects.pptx';editor._write(target)
             deck=Presentation(target);slide=deck.slides[0]
             self.assertTrue(any(s.has_chart for s in slide.shapes));self.assertTrue(any(s.has_table for s in slide.shapes));self.assertTrue(any(s.shape_type==13 for s in slide.shapes))

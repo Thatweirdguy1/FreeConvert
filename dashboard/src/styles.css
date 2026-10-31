@@ -100,21 +100,25 @@
 .workspace-nav-row:hover {
   background: #292932;
 }
-.slide-mini {
-  display: flex;
-  aspect-ratio: 16/9;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  background: #ece9df;
-  color: #172e3f;
-  border-radius: 3px;
-  font-size: 12px;
-  font-weight: 600;
+.slide-preview {
+  display: block;
+  font-size: 11px;
 }
-.slide-mini small {
-  font-size: 9px;
-  font-weight: 400;
+.slide-preview-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid #777181;
+  border-radius: 4px;
+  background: #25252f;
+}
+.slide-preview-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .playlist-panel {
   display: flex;

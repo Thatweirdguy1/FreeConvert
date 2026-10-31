@@ -60,6 +60,7 @@ class WorkspaceBridge(QObject):
         if tool == 'pages':
             state.update(font=w.font_family.currentText(), size=w.font_size.value(), words=len(w.editor.toPlainText().split()))
         if tool == 'tables':state.update(address=w.cell_address.text(), formula=w.formula.text())
+        if tool == 'dazzle':state.update(previewRevision=w.preview_revision,slideAspect=w.deck.slide_width/w.deck.slide_height)
         listing = getattr(w, {'writer':'scenes','organize':'tables','dazzle':'list'}.get(tool,''), None)
         if listing is not None:
             state.update(items=[listing.item(i).text() for i in range(listing.count())], current=listing.currentRow())
@@ -81,6 +82,12 @@ class WorkspaceBridge(QObject):
     def ready(self):
         self.last = None
         self.publish()
+
+    @Slot(int,result=str)
+    def thumbnail(self,index):
+        if self.tool!='dazzle':return ''
+        try:return self.window.thumbnail(index)
+        except (ValueError,RuntimeError,IndexError,TypeError):return ''
 
     def publish(self):
         if not self.window.isVisible():return

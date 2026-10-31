@@ -63,6 +63,12 @@ def run(owner, application, wait, folder, _warnings):
             window.open(window.path)
             assert bridge.state()['name']=='Harbor notes.docx' and bridge.state()['imported']
             assert not bridge.state()['saved']
+        elif tool=='dazzle':
+            wait(lambda:js('!![...document.images].find(i => i.alt.startsWith("Slide 1:") && i.naturalWidth > 0)'))
+            assert window.slide_styles[0]['background']=='#f5f3eb'
+            window.add()
+            bridge.command('{"key":"select","value":0}')
+            assert window.index==0
         elif tool=='tables':
             window.grid.setCurrentCell(0,0)
             bridge.command(json.dumps(dict(key='formula',value='=2+3')))

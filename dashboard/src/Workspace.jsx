@@ -12,6 +12,7 @@ import {
   ListTree,
 } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import SlideThumbnail from "./components/SlideThumbnail";
 import WorkspaceToolbar, { CommandButton } from "./components/WorkspaceToolbar";
 import PlayerControls, { Playlist } from "./components/PlayerControls";
 import { tools } from "./data";
@@ -452,10 +453,13 @@ export default function Workspace() {
                       className={`workspace-nav-row ${i === state.current ? "selected" : ""}`}
                     >
                       {tool === "dazzle" ? (
-                        <span className="slide-mini">
-                          <small>{String(i + 1).padStart(2, "0")}</small>
-                          <span>{item}</span>
-                        </span>
+                        <SlideThumbnail
+                          bridge={bridge}
+                          index={i}
+                          revision={state.previewRevision}
+                          aspect={state.slideAspect}
+                          title={item}
+                        />
                       ) : (
                         <>
                           <span className="mr-2 font-mono text-[10px] text-muted">

@@ -225,7 +225,7 @@ class UsabilityTest(unittest.TestCase):
                 page = pdf[0]
                 bitmap = page.render(scale=.1)
                 try:
-                    self.assertEqual(bitmap.to_pil().getpixel((2, 2))[:3], (11, 11, 11))
+                    self.assertEqual(bitmap.to_pil().getpixel((2, 2))[:3], (245, 243, 235))
                 finally:
                     bitmap.close()
                     page.close()
