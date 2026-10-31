@@ -1,4 +1,4 @@
-# React Home — 0.29.3
+# React Home — 0.29.4
 
 The startup Home screen uses React, Tailwind CSS and Lucide icons, taking the Stitch dashboard's navigation / launch cards / tool grid / recent-file structure as inspiration. Black, yellow and purple, the original wordmark, labeled navigation, keyboard focus, reduced motion, local file dialogs, search and category filters are shared across the launcher.
 
@@ -16,3 +16,5 @@ New source dependencies: Node 24 for building the React UI, and Qt WebEngine / W
 - Release CI builds the React assets and runs the packaged dashboard check on Windows and both macOS targets alongside the existing OCR, native conversion, playlist and playback checks.
 
 Only the Home screen has been converted to React. Editors and the player continue using their existing native Qt interfaces. File format limitations remain as documented in the main README.
+
+Windows defaults the embedded Home renderer to software compositing to prevent a black dashboard on affected graphics drivers. This flag applies to Qt WebEngine, not the separate libVLC player. The installed Windows UI is checked with the Computer plugin in addition to the packaged self-check.
