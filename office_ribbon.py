@@ -6,6 +6,7 @@ from ui import icon,palette
 
 
 def install_ribbon(window):
+    if getattr(window, '_react_shell', False):return
     if hasattr(window,'ribbon'):return
     bars=window.findChildren(QToolBar,options=Qt.FindDirectChildrenOnly)
     window._ribbon_source_bars=bars

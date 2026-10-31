@@ -25,7 +25,7 @@ from converter import (available_formats, compress, convert, edit_image, extract
                        trim_media, zip_entries, pdfium_guard)
 from office_pdf import LEGACY_FORMATS, LIBREOFFICE_FORMATS, available_engines, resolve_engine
 
-VERSION = "0.29.4"
+VERSION = "0.30.0"
 
 
 def numbered_target(folder: Path, stem: str, suffix: str, reserved: set[str], pages: int = 1) -> Path:
@@ -589,11 +589,18 @@ class Window(QMainWindow):
         files, _ = QFileDialog.getOpenFileNames(self, "Choose files")
         self._add_files([Path(file) for file in files])
 
+    def _frontend(self, window, tool):
+        if hasattr(self, 'dashboard'):
+            from desktop_workspaces import install
+            install(self, window, tool)
+        return window
+
     def _screenwriter(self):
         from screenwriter import ScreenwriterWindow
         if self.screenwriter is None:
             self.screenwriter = ScreenwriterWindow()
             self._workspace_templates(self.screenwriter, "Writer's Drafts")
+            self._frontend(self.screenwriter, 'writer')
         self.screenwriter.show()
         self.screenwriter.raise_()
         self.screenwriter.activateWindow()
@@ -610,6 +617,7 @@ class Window(QMainWindow):
             return
         from watchit import EngineLoader, WatchIT
         self.watchit = WatchIT(deferred=True)
+        self._frontend(self.watchit, 'play')
         self.watchit.show()
         self.watchit.raise_()
         self.watchit.activateWindow()
@@ -641,6 +649,7 @@ class Window(QMainWindow):
         if name not in self.workspaces:
             self.workspaces[name] = WORKSPACES[name]()
             self._workspace_templates(self.workspaces[name], name)
+            self._frontend(self.workspaces[name], name.lower())
         window = self.workspaces[name]
         window.show()
         window.raise_()
@@ -662,6 +671,7 @@ class Window(QMainWindow):
             window.original_paragraphs = []
             window.editor.document().setModified(False)
         window.path = target
+        self._frontend(window, 'writer' if workspace == "Writer's Drafts" else workspace.lower())
         window.show()
         window.raise_()
         window.activateWindow()
@@ -733,6 +743,7 @@ class Window(QMainWindow):
                 self._workspace_templates(window, "Writer's Drafts" if name == 'Writer' else name)
                 self.workspaces[f'open:{id(window)}'] = window
                 (window._open if name == 'Writer' else window.open)(path)
+                self._frontend(window, name.lower())
                 window.show();window.raise_();window.activateWindow()
             if remaining:
                 self.show()
@@ -1373,12 +1384,11 @@ def main():
         if forward_play(sys.argv[2:], enqueue=sys.argv[1] == '--enqueue'):
             return
     window = Window()
-    if not sys.argv[1:]:
-        try:
-            from desktop_dashboard import install
-            install(window)
-        except (ImportError, FileNotFoundError) as error:
-            window.status.setText(f"Home unavailable: {error}. Native tools are ready.")
+    try:
+        from desktop_dashboard import install
+        install(window)
+    except (ImportError, FileNotFoundError) as error:
+        window.status.setText(f"Home unavailable: {error}. Native tools are ready.")
     if not sys.argv[1:]:window.show()
     QTimer.singleShot(0, lambda: window.open_arguments(sys.argv[1:]))
     sys.exit(app.exec())

@@ -104,13 +104,15 @@ def run(screenshot_dir=None):
             owner.workspaces['Tables'].close()
 
         wait(lambda: owner.preview_worker is None)
+        from verify_workspaces import run as check_workspaces
+        suite = check_workspaces(owner, application, wait, folder)
         owner.close()
         application.processEvents()
         # Destroy the page before its off-the-record profile.
         view.page().deleteLater()
         QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
     print(json.dumps({'version': VERSION, 'dashboard': 'passed', 'native_bridge': 'passed',
-                      'file_queue': 'passed', 'local_navigation': 'passed', 'responsive': 'passed'}))
+                      'file_queue': 'passed', 'local_navigation': 'passed', 'responsive': 'passed', 'suite': suite}))
 
 
 if __name__ == '__main__':

@@ -7,23 +7,23 @@ import {
 } from "lucide-react";
 import { tools } from "../data";
 import ToolIcon from "./Icons";
-export default function Sidebar({ collapsed, onCollapse, onLaunch }) {
+export default function Sidebar({ collapsed, onCollapse, onLaunch, active = "home" }) {
   return (
     <aside
       className={`sidebar ${collapsed ? "is-collapsed" : ""} flex shrink-0 flex-col border-r border-line bg-panel/60`}
     >
       <div className="flex h-24 items-center justify-center border-b border-line px-4">
         <img
-          src="./logo.png"
+          src={collapsed ? "./app.ico" : "./logo.png"}
           alt="Drunk Peanuts."
-          className={`object-contain ${collapsed ? "w-14" : "w-48"}`}
+          className={`object-contain ${collapsed ? "size-9" : "w-48"}`}
         />
       </div>
       <nav
         aria-label="Main navigation"
         className="flex-1 overflow-y-auto px-3 py-5"
       >
-        <button className="nav-item active" aria-current="page" title="Home">
+        <button onClick={() => onLaunch("home")} className={`nav-item ${active === "home" ? "active" : ""}`} aria-current={active === "home" ? "page" : undefined} title="Home">
           <Home size={19} aria-hidden="true" />
           <span className="nav-label">Home</span>
           <span className="nav-label ml-auto text-xs text-muted">01</span>
@@ -40,7 +40,8 @@ export default function Sidebar({ collapsed, onCollapse, onLaunch }) {
                   key={tool.id}
                   onClick={() => onLaunch(tool.id)}
                   title={`${tool.name} — ${tool.detail}`}
-                  className="nav-item"
+                  className={`nav-item ${active === tool.id ? "active" : ""}`}
+                  aria-current={active === tool.id ? "page" : undefined}
                 >
                   <ToolIcon name={tool.icon} />
                   <span className="nav-label">{tool.name}</span>

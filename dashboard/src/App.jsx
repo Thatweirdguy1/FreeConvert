@@ -68,6 +68,7 @@ export default function App() {
   }, []);
 
   function launch(id) {
+    if (id === "home") return;
     if (bridge) {
       bridge.launch(id);
       return;
