@@ -134,7 +134,7 @@ class WorkspaceBridge(QObject):
                 elif key == 'pen':w.canvas.eraser=False
             elif self.tool == 'play':
                 callbacks = {'toggle':w.toggle,'previous':w.previous,'next':w.next,'stop':w.stop,
-                             'open':w.open_files,'folder':w.add_folder,'openList':w.open_playlist,
+                             'open':w.open_files,'add':w.enqueue_files,'folder':w.add_folder,'openList':w.open_playlist,
                              'saveList':w.save_playlist,'clear':w.clear_playlist,'mute':w.mute.click,
                              'pip':w.picture_in_picture,'fullscreen':w.fullscreen,'options':w.options_toggle.click}
                 if key in callbacks:callbacks[key]()
@@ -169,7 +169,7 @@ class WorkspaceBridge(QObject):
             if len(values)!=4 or not all(isinstance(v,(float,int)) and math.isfinite(v) for v in values):return
             x,y,width,height = map(round,values)
             bounds=QRect(x,y,max(0,width),max(0,height)).intersected(self.view.rect())
-            self.host.setGeometry(bounds)
+            self.host.setGeometry(bounds.translated(self.view.pos()))
             self.host.setVisible(bounds.width()>0 and bounds.height()>0)
             self.host.raise_()
         except (ValueError,TypeError):return

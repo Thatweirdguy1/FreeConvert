@@ -409,7 +409,7 @@ class WatchIT(QMainWindow):
             item.setData(Qt.UserRole, str(path))
             item.setToolTip(str(path))
             self.playlist.addItem(item)
-        if self._pip_state is None and not self.isFullScreen():
+        if self._pip_state is None and not self.isFullScreen() and not getattr(self, '_react_shell', False):
             self.playlist_toggle.setChecked(True)
         self.queue_count.setText(f'{len(self.files)} tracks')
         if autoplay:
@@ -566,12 +566,12 @@ class WatchIT(QMainWindow):
             return
         self.setWindowState(self._fullscreen_state or Qt.WindowNoState)
         for widget in (self.heading, self.options_toggle):
-            widget.show()
+            widget.setVisible(not getattr(self, '_react_shell', False))
         self.playlist.setVisible(self._playlist_visible)
         self.playlist_tools.setVisible(self._playlist_visible)
         self.options_scroll.setVisible(self._options_visible)
         self.centralWidget().layout().setContentsMargins(self._fullscreen_margins)
-        self.statusBar().show()
+        self.statusBar().setVisible(not getattr(self, '_react_shell', False))
         icon_button(self.fullscreen_button, "Fullscreen (F11)", "fullscreen")
         self._show_controls(True)
 
@@ -630,6 +630,7 @@ class WatchIT(QMainWindow):
             self.exit_fullscreen()
 
     def _show_controls(self, visible):
+        if getattr(self, '_react_shell', False):return
         for widget in (self.seek, self.time_label, self.transport, self.volume_controls):
             widget.setVisible(visible)
 

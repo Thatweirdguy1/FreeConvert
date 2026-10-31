@@ -1,4 +1,4 @@
-## Drunk Peanuts 0.30.0
+## Drunk Peanuts 0.30.1
 
 Eight fresh Stitch designs inform the new Pages, Tables, Dazzle, Organize, Sketch, Formulaic, Writer and Play workspaces, built with React, Tailwind CSS and Lucide icons in the black, yellow and purple identity.
 
@@ -16,7 +16,7 @@ All assets, the original logo, icons and Qt web runtime are bundled locally. No 
 
 ### Downloads
 
-- DrunkPeanuts-0.30.0-Setup.exe — Windows installer.
+- DrunkPeanuts-0.30.1-Setup.exe — Windows installer.
 - DrunkPeanuts-Windows-x64.zip — portable folder.
 - DrunkPeanuts-macOS-Apple-Silicon.zip and DrunkPeanuts-macOS-Intel.zip.
 - SHA256SUMS.txt — checksums.

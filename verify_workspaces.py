@@ -78,7 +78,10 @@ def run(owner, application, wait, folder):
             assert int(window.surface.winId())==surface and int(window.winId())==handle
             bridge.command('{"key":"pip"}');wait(lambda:not js('!!document.querySelector(".player-controls.compact")'))
             bridge.command('{"key":"fullscreen"}');assert window.isFullScreen()
+            window._show_controls(True)
+            assert window.transport.isHidden() and window.seek.isHidden()
             window.escape_view();assert not window.isFullScreen()
+            assert window.heading.isHidden() and window.statusBar().isHidden()
             if window.player is not None:assert window.player.is_playing()
         if hasattr(window,'dirty'):window.dirty=False
         if hasattr(window,'source'):window.source.document().setModified(False)
