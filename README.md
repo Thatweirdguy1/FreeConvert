@@ -12,9 +12,9 @@ A free, local desktop converter and creative suite for Windows and macOS. Conver
 
 Choose files to open the native conversion queue, or launch Pages, Tables, Dazzle, Sketch, Organize, Formulaic, Writer and Play directly. Use **Home** in the menu or **Ctrl+Shift+H** to return from conversion. Editors retain their native interfaces and save protections; this release redesigns the launcher, rather than replacing the editing engines.
 
-![Drunk Peanuts Home, rendered inside the native Windows app](docs/dashboard-native-029.png)
+![Installed Drunk Peanuts 0.29.4 Home on Windows](docs/home-installed-0294.jpg)
 
-![Compact Home layout inside the native Windows app](docs/dashboard-compact-029.png)
+![Native Pages opened from the installed Home workspace](docs/pages-installed-0294.jpg)
 
 The dashboard assets, icons and Qt web runtime are bundled locally. Installed users need neither Node nor Python, and the launcher needs no server, remote font, account or connection. Its recent list records files explicitly chosen through Home; clearing that list does not delete files. See the [dashboard implementation and checks](docs/DASHBOARD_029.md) and [React source](dashboard).
 

@@ -18,3 +18,11 @@ New source dependencies: Node 24 for building the React UI, and Qt WebEngine / W
 Only the Home screen has been converted to React. Editors and the player continue using their existing native Qt interfaces. File format limitations remain as documented in the main README.
 
 Windows defaults the embedded Home renderer to software compositing to prevent a black dashboard on affected graphics drivers. This flag applies to Qt WebEngine, not the separate libVLC player. The installed Windows UI is checked with the Computer plugin in addition to the packaged self-check.
+
+## Published and installed verification
+
+[The 0.29.4 release build](https://github.com/Thatweirdguy1/Drunk-Peanuts/actions/runs/41211744545) passed on Windows x64, Intel macOS and Apple Silicon, including source and packaged React/native bridge, OCR, native conversion, playlist and playback checks. [Release downloads](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/tag/v0.29.4) include installers, portable archives and SHA256SUMS.txt.
+
+The Windows installer matched both its GitHub asset digest and SHA256SUMS.txt: `da8c32b9fe5a52cc9b2ba08674beed0630a0e4897e7c03f9304967345c1f8fa6`. Installed executable metadata reports 0.29.4. Its dashboard self-check and native Office conversion checks passed after installation.
+
+Computer verified a normal installed launch without external graphics overrides, correct Home rendering after maximizing, and opening native Pages. Earlier visual checks also exercised native Convert and Ctrl+Shift+H return to Home. README images are fresh captures of the installed 0.29.4 Home and Pages windows. The Windows renderer defaults to software compositing because a hardware-rendered Home appeared black on this machine; Play remains on its separate VLC renderer.
