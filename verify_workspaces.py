@@ -2,11 +2,17 @@
 import json
 import sys
 import wave
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
 
-def run(owner, application, wait, folder):
+def unexpected_warning(parent, title, message, *_):
+    raise AssertionError(f'Unexpected native warning: {title}: {message}')
+
+
+@patch('PySide6.QtWidgets.QMessageBox.warning', side_effect=unexpected_warning)
+def run(owner, application, wait, folder, _warnings):
     from PySide6.QtCore import QCoreApplication, QEvent, QSettings
     from PySide6.QtGui import QTextCursor
     from PySide6.QtWidgets import QMessageBox
@@ -15,7 +21,12 @@ def run(owner, application, wait, folder):
     from screenwriter import ScreenwriterWindow
     from watchit import WatchIT
     results=[]
+    trace=Path(tempfile.gettempdir())/'DrunkPeanuts-workspace-check-trace.txt'
+    def stage(message):
+        with trace.open('a',encoding='utf-8') as stream:stream.write(message+'\n')
+    trace.write_text('Starting workspace checks\n',encoding='utf-8')
     for tool in ('pages','tables','dazzle','organize','sketch','formulaic','writer','play'):
+        stage(tool+': create')
         with patch('screenwriter.Path.home',return_value=Path(folder)), patch('screenwriter.QSettings',return_value=QSettings(str(Path(folder)/'writer.ini'),QSettings.IniFormat)):
             window=ScreenwriterWindow() if tool=='writer' else WatchIT(deferred=not getattr(sys,'frozen',False)) if tool=='play' else WORKSPACES[tool.title()]()
         install(owner,window,tool)
@@ -37,6 +48,7 @@ def run(owner, application, wait, folder):
             assert window.frontend_host.width()==500
         actions=bridge.state()['actions']
         assert actions or tool=='play',tool
+        stage(tool+': controls')
         if tool=='pages':
             window.editor.setPlainText('Harbor notes\nFirst light at the pier.')
             cursor=window.editor.textCursor();cursor.select(QTextCursor.Document);window.editor.setTextCursor(cursor)
@@ -86,10 +98,12 @@ def run(owner, application, wait, folder):
             window.escape_view();assert not window.isFullScreen()
             assert window.heading.isHidden() and window.statusBar().isHidden()
             if window.player is not None:assert window.player.is_playing()
+        stage(tool+': cleanup')
         if hasattr(window,'dirty'):window.dirty=False
         if hasattr(window,'source'):window.source.document().setModified(False)
         with patch.object(QMessageBox,'question',return_value=QMessageBox.Discard):window.close()
         window.frontend.page().deleteLater();QCoreApplication.sendPostedEvents(None,QEvent.DeferredDelete)
         window.deleteLater();QCoreApplication.sendPostedEvents(None,QEvent.DeferredDelete)
         results.append(tool)
+        stage(tool+': passed')
     return results

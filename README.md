@@ -8,15 +8,17 @@
 
 A free, local desktop converter and creative suite for Windows and macOS. Convert files, work with PDFs, images, media, ZIPs and OCR, or create documents, tables, presentations, formulas, drawings, databases, screenplays, and play media with Play.
 
-**Version 0.29.4** introduces a new **Home workspace**: a React dashboard built with Tailwind CSS and Lucide icons, inspired by the Drunk Peanuts Stitch design. Convert, Create and Play sit together in a compact black, yellow and purple workspace with searchable tools, a collapsible navigation rail and local recent files.
+**Version 0.30.2** extends the Stitch-inspired React interface across **Pages, Tables, Dazzle, Organize, Sketch, Formulaic, Writer and Play**. Tailwind CSS, Lucide icons and the original DP identity bring a shared black, yellow and purple workspace to the desktop suite.
 
-Choose files to open the native conversion queue, or launch Pages, Tables, Dazzle, Sketch, Organize, Formulaic, Writer and Play directly. Use **Home** in the menu or **Ctrl+Shift+H** to return from conversion. Editors retain their native interfaces and save protections; this release redesigns the launcher, rather than replacing the editing engines.
+The new React navigation, contextual toolbars, save status, searchable **Commands**, formula bar, scene/table navigation and playlist controls connect directly to the existing native editing canvases and file engines. Use Commands for templates, exports and additional formatting; Inspector reveals contextual native panels. Open With and template launches use the same interface. The converter keeps its native queue; **Home** or **Ctrl+Shift+H** returns without clearing it.
 
-![Installed Drunk Peanuts 0.29.4 Home on Windows](docs/home-installed-0294.jpg)
+| Pages | Play |
+| --- | --- |
+| ![Pages desktop workspace with a sample local document](docs/workspaces-0302/pages.jpg) | ![Play desktop workspace with local video](docs/workspaces-0302/play.jpg) |
 
-![Native Pages opened from the installed Home workspace](docs/pages-installed-0294.jpg)
+[View fresh desktop screenshots of all eight workspaces and PiP](docs/WORKSPACE_GALLERY_0302.md). Screenshots use sample local documents; native editing and playback controls are connected to the desktop engines.
 
-The dashboard assets, icons and Qt web runtime are bundled locally. Installed users need neither Node nor Python, and the launcher needs no server, remote font, account or connection. Its recent list records files explicitly chosen through Home; clearing that list does not delete files. See the [dashboard implementation and checks](docs/DASHBOARD_029.md) and [React source](dashboard).
+All React assets, icons and the Qt web runtime are bundled locally. Installed users need neither Node nor Python, and the interface needs no server, remote font, account or connection. Home records files explicitly chosen there; clearing its recent list does not delete files. Native save/close safeguards and existing file-format limits remain in place. See the [suite design and integration](docs/STITCH_SUITE_030.md), [Home implementation](docs/DASHBOARD_029.md) and [React source](dashboard).
 
 Play continues to offer editable local playlists, **Picture in Picture** and **volume up to 200%**. Existing OCR, PDF tools, document editing, spreadsheet formulas, presentation mode and Windows Open with handlers remain available. See [Play controls](docs/PLAY_PIP_VOLUME_028.md), [playlists](docs/PLAYLISTS_027.md), [Office batches and limitations](docs/OFFICE_BATCHES.md), and [editable PDF conversion](docs/EDITABLE_OPEN_WITH_026.md).
 
@@ -26,7 +28,7 @@ Get the app from the [latest release](https://github.com/Thatweirdguy1/Drunk-Pea
 
 | Platform | Download | How to open |
 | --- | --- | --- |
-| **Windows x64 — installer** | [Drunk Peanuts Setup](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-0.29.4-Setup.exe) | Run Setup, then use **Drunk Peanuts on your Desktop or Start menu**. Installs for your user, with an uninstaller and Office and media-file registration. |
+| **Windows x64 — installer** | [Drunk Peanuts Setup](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-0.30.2-Setup.exe) | Run Setup, then use **Drunk Peanuts on your Desktop or Start menu**. Installs for your user, with an uninstaller and Office and media-file registration. |
 | Windows x64 — portable | [Portable ZIP](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-Windows-x64.zip) | Extract the entire folder and open `LocalFileConverter.exe`. Keep the bundled files together. Use the installer for Desktop/Start menu integration. |
 | macOS — Apple Silicon | [Apple Silicon ZIP](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-macOS-Apple-Silicon.zip) | Extract and open `DrunkPeanuts.app`. |
 | macOS — Intel | [Intel ZIP](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-macOS-Intel.zip) | Extract and open `DrunkPeanuts.app`. |
