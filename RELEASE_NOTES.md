@@ -1,4 +1,4 @@
-## Drunk Peanuts 0.30.2
+## Drunk Peanuts 0.30.3
 
 Eight fresh Stitch designs inform the new Pages, Tables, Dazzle, Organize, Sketch, Formulaic, Writer and Play workspaces, built with React, Tailwind CSS and Lucide icons in the black, yellow and purple identity.
 
@@ -8,6 +8,8 @@ Play includes React transport/seek controls, mute, volume up to 200%, editable l
 
 All assets, the original logo, icons and Qt web runtime are bundled locally. No server, remote fonts, account or network connection is needed. The converter retains its native queue and tools.
 
+The macOS bundle also includes python-docx's module directories and header/footer templates, so opening Word documents can resolve those resources inside the app bundle.
+
 ### Validation
 
 - 94 Python regression tests and the frontend Node check pass locally.
@@ -16,7 +18,7 @@ All assets, the original logo, icons and Qt web runtime are bundled locally. No 
 
 ### Downloads
 
-- DrunkPeanuts-0.30.2-Setup.exe — Windows installer.
+- DrunkPeanuts-0.30.3-Setup.exe — Windows installer.
 - DrunkPeanuts-Windows-x64.zip — portable folder.
 - DrunkPeanuts-macOS-Apple-Silicon.zip and DrunkPeanuts-macOS-Intel.zip.
 - SHA256SUMS.txt — checksums.

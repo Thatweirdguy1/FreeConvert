@@ -8,7 +8,7 @@
 
 A free, local desktop converter and creative suite for Windows and macOS. Convert files, work with PDFs, images, media, ZIPs and OCR, or create documents, tables, presentations, formulas, drawings, databases, screenplays, and play media with Play.
 
-**Version 0.30.2** extends the Stitch-inspired React interface across **Pages, Tables, Dazzle, Organize, Sketch, Formulaic, Writer and Play**. Tailwind CSS, Lucide icons and the original DP identity bring a shared black, yellow and purple workspace to the desktop suite.
+**Version 0.30.3** extends the Stitch-inspired React interface across **Pages, Tables, Dazzle, Organize, Sketch, Formulaic, Writer and Play**. Tailwind CSS, Lucide icons and the original DP identity bring a shared black, yellow and purple workspace to the desktop suite.
 
 The new React navigation, contextual toolbars, save status, searchable **Commands**, formula bar, scene/table navigation and playlist controls connect directly to the existing native editing canvases and file engines. Use Commands for templates, exports and additional formatting; Inspector reveals contextual native panels. Open With and template launches use the same interface. The converter keeps its native queue; **Home** or **Ctrl+Shift+H** returns without clearing it.
 
@@ -28,7 +28,7 @@ Get the app from the [latest release](https://github.com/Thatweirdguy1/Drunk-Pea
 
 | Platform | Download | How to open |
 | --- | --- | --- |
-| **Windows x64 — installer** | [Drunk Peanuts Setup](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-0.30.2-Setup.exe) | Run Setup, then use **Drunk Peanuts on your Desktop or Start menu**. Installs for your user, with an uninstaller and Office and media-file registration. |
+| **Windows x64 — installer** | [Drunk Peanuts Setup](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-0.30.3-Setup.exe) | Run Setup, then use **Drunk Peanuts on your Desktop or Start menu**. Installs for your user, with an uninstaller and Office and media-file registration. |
 | Windows x64 — portable | [Portable ZIP](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-Windows-x64.zip) | Extract the entire folder and open `LocalFileConverter.exe`. Keep the bundled files together. Use the installer for Desktop/Start menu integration. |
 | macOS — Apple Silicon | [Apple Silicon ZIP](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-macOS-Apple-Silicon.zip) | Extract and open `DrunkPeanuts.app`. |
 | macOS — Intel | [Intel ZIP](https://github.com/Thatweirdguy1/Drunk-Peanuts/releases/latest/download/DrunkPeanuts-macOS-Intel.zip) | Extract and open `DrunkPeanuts.app`. |
