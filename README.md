@@ -12,6 +12,8 @@ A free, local desktop converter and creative suite for Windows and macOS. Conver
 
 The new React navigation, contextual toolbars, save status, searchable **Commands**, formula bar, scene/table navigation and playlist controls connect directly to the existing native editing canvases and file engines. Use Commands for templates, exports and additional formatting; Inspector reveals contextual native panels. Open With and template launches use the same interface. The converter keeps its native queue; **Home** or **Ctrl+Shift+H** returns without clearing it.
 
+![Installed Drunk Peanuts 0.30.3 Home on Windows](docs/home-installed-0303.jpg)
+
 | Pages | Play |
 | --- | --- |
 | ![Pages desktop workspace with a sample local document](docs/workspaces-0302/pages.jpg) | ![Play desktop workspace with local video](docs/workspaces-0302/play.jpg) |
