@@ -611,6 +611,7 @@ class Canvas(QWidget):
 class Sketch(Workspace):
     def __init__(self):
         super().__init__("Sketch")
+        self.imported_image = None
         self.canvas = Canvas()
         self.setCentralWidget(self.canvas)
         self.canvas.changed.connect(lambda: setattr(self, "dirty", True))
@@ -631,6 +632,7 @@ class Sketch(Workspace):
         if not self.discard_changes():
             return
         self.canvas.image = QImage(1200, 800, QImage.Format_ARGB32)
+        self.imported_image = None
         self.canvas.image.fill(Qt.white)
         self.canvas.update()
         self.path = None
@@ -658,6 +660,7 @@ class Sketch(Workspace):
                 QMessageBox.warning(self, "Sketch", "Could not open image")
                 return
             self.canvas.image = image.convertToFormat(QImage.Format_ARGB32)
+            self.imported_image = path
             self.canvas.update()
             # Imported images may contain metadata the canvas cannot retain.
             self.path = None

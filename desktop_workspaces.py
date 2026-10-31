@@ -1,6 +1,7 @@
 """React workspace chrome around the existing, lossless native editing engines."""
 import json
 import math
+from pathlib import Path
 
 from PySide6.QtCore import QObject, QRect, Qt, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import QColor
@@ -47,7 +48,10 @@ class WorkspaceBridge(QObject):
         w, tool = self.window, self.tool
         editor = getattr(w, 'editor', getattr(w, 'source', None))
         dirty = editor.document().isModified() if editor is not None else getattr(w, 'dirty', False)
-        state = dict(tool=tool, native=True, name=str(w.path.name) if getattr(w, 'path', None) else 'Untitled',
+        path = getattr(w, 'path', None)
+        imported = next((getattr(w, key, None) for key in ('imported_docx','imported_xlsx','imported_pptx','imported_image') if getattr(w,key,None)), None)
+        state = dict(tool=tool, native=True, name=Path(path or imported).name if path or imported else 'Untitled',
+                     saved=bool(path), imported=bool(imported and not path),
                      dirty=dirty, status=self.message or w.statusBar().currentMessage(),
                      actions=[dict(id=str(i), label=a.text().replace('&', ''), group=self.groups[i],
                                    enabled=a.isEnabled(), checked=a.isCheckable() and a.isChecked(),

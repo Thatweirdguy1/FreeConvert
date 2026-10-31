@@ -48,6 +48,9 @@ def run(owner, application, wait, folder):
             from docx import Document
             assert 'First light' in '\n'.join(p.text for p in Document(window.path).paragraphs)
             assert not window.editor.document().isModified()
+            window.open(window.path)
+            assert bridge.state()['name']=='Harbor notes.docx' and bridge.state()['imported']
+            assert not bridge.state()['saved']
         elif tool=='tables':
             window.grid.setCurrentCell(0,0)
             bridge.command(json.dumps(dict(key='formula',value='=2+3')))
